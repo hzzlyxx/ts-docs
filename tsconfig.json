@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
+    "outDir": "./lib",
     "target": "es5",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "jsx": "react"
+    "lib": [
+      "ESNext",
+    ],
   },
+  "include": ["./src"],
   "exclude": [
     "node_modules",
-    "dist",
-    "lib"
+    "example",
+    "doc"
   ]
 }

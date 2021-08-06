@@ -1,18 +1,24 @@
 {
   "name": "@hzzlyxx/docs",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/hzzlyxx/docs.git",
   "author": "hzzly <hjingren@aliyun.com>",
   "license": "MIT",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": " rm -rf lib"
+  },
   "dependencies": {
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   },
   "devDependencies": {
     "@types/node": "^16.4.10",
-    "@types/prettier": "^2.3.2",
-    "@types/react": "^17.0.15",
-    "react": "^17.0.2"
+    "@types/prettier": "^2.3.2"
   }
 }

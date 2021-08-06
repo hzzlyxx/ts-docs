@@ -1,15 +1,14 @@
 /*
  * @Author: hzzly
- * @Date: 2021-08-06 14:50:46
+ * @Date: 2021-08-06 17:24:48
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-06 15:44:17
+ * @LastEditTime: 2021-08-06 17:48:47
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
 import * as fs from "fs";
 import * as path from "path";
-import JsonToMarkdown from "./JsonToMarkdown";
-import TsToJson from "./TsToJson";
+import { TsToJson, JsonToMarkdown } from "../../lib";
 
 function readFiles() {
   const dir = path.join(__dirname, "../src");
@@ -24,7 +23,8 @@ function readFiles() {
       fs.readdirSync(absolutePath).forEach((f) => {
         const typePath = path.join(dir, `./${d}/${f}/type.ts`);
         if (fs.existsSync(typePath)) {
-          const json = TsToJson.parse([`${typePath}`]);
+          const ts2Json = new TsToJson();
+          const json = ts2Json.parse([`${typePath}`]);
           const json2Markdown = new JsonToMarkdown();
           fs.writeFileSync(
             path.join(dir, `./${d}/${f}/index.md`),

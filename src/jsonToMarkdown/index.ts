@@ -2,13 +2,16 @@
  * @Author: hzzly
  * @Date: 2021-08-06 14:31:20
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-06 14:46:18
+ * @LastEditTime: 2021-08-06 18:00:39
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
 import * as prettier from "prettier";
-import { Interfaces, DocsType } from "./TsToJson";
+import { Interfaces, DocsType } from "../TsToJson";
 
+/**
+ * json 转换为 markdown
+ */
 class JsonToMarkdown {
   commentToMarkDown(json: Interfaces) {
     return Object.keys(json)
