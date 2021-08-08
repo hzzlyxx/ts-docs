@@ -1,11 +1,16 @@
 {
-  "name": "@hzzlyxx/docs",
-  "version": "1.0.0",
-  "repository": "https://github.com/hzzlyxx/docs.git",
+  "name": "@hzzlyxx/ts-docs",
+  "version": "1.0.2",
+  "description": "TS接口类型转换为json对象",
   "author": "hzzly <hjingren@aliyun.com>",
   "license": "MIT",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "keywords": [
+    "TypeScript",
+    "ts2json",
+    "json2markdown"
+  ],
   "files": [
     "lib"
   ],
@@ -20,5 +25,13 @@
   "devDependencies": {
     "@types/node": "^16.4.10",
     "@types/prettier": "^2.3.2"
+  },
+  "bugs": {
+    "url": "https://github.com/hzzlyxx/docs/issues"
+  },
+  "homepage": "https://github.com/hzzlyxx/docs",
+  "repository": "https://github.com/hzzlyxx/docs.git",
+  "publishConfig": {
+    "access": "public"
   }
 }
