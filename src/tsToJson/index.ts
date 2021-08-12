@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-04 14:26:13
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-06 18:00:54
+ * @LastEditTime: 2021-08-11 17:00:37
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -150,7 +150,7 @@ class TsToJson {
     const docs: DocsType = {};
     if (Array.isArray(symbol.getJsDocTags(this.checker))) {
       symbol.getJsDocTags(this.checker).forEach((tag) => {
-        docs[tag.name] = tag.text[0].text;
+        docs[tag.name] = tag.text && tag.text[0].text;
       });
     }
     return docs;

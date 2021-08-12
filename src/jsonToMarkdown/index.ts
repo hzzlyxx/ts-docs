@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-06 14:31:20
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-06 18:00:39
+ * @LastEditTime: 2021-08-11 17:12:30
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -13,10 +13,15 @@ import { Interfaces, DocsType } from "../TsToJson";
  * json 转换为 markdown
  */
 class JsonToMarkdown {
-  commentToMarkDown(json: Interfaces) {
+  commentToMarkDown(
+    json: Interfaces,
+    render?: (name: string, data: Interfaces["name"]) => string
+  ) {
     return Object.keys(json)
       .map((key) => {
-        const markdownInfo = this.renderMarkDown(key, json[key]);
+        const markdownInfo = render
+          ? render(key, json[key])
+          : this.renderMarkDown(key, json[key]);
         if (markdownInfo) {
           // 使用prettier美化格式
           const content = prettier.format(markdownInfo, {
@@ -32,8 +37,8 @@ class JsonToMarkdown {
   renderMarkDown(name: string, data: Interfaces["name"]) {
     const { props, ignore, description } = data;
     if (ignore) return;
-    return `## ${name} Props
-  ${description ? `> ${description} \n` : ""}
+    return `## ${name}
+  ${description ? `#### ${description} \n` : ""}
   | 属性 | 描述 | 类型 | 默认值 | 必填 |
   | --- | --- | --- | --- | ---|
   ${props.map((prop) => this.renderProp(prop)).join("")}
