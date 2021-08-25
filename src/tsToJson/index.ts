@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-04 14:26:13
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-11 17:00:37
+ * @LastEditTime: 2021-08-25 10:37:21
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -26,11 +26,12 @@ export interface Interfaces {
 }
 
 /**
- * Ts Interface 或 Type 类型定义转换为 json
+ * Ts Interface 类型定义转换为 json
  */
 class TsToJson {
   checker: ts.TypeChecker;
   interfaces: Interfaces;
+  fileNames: string[];
   types: {};
 
   _createProgram(fileNames: string[], options: ts.CompilerOptions) {
@@ -41,6 +42,8 @@ class TsToJson {
     const program = ts.createProgram(fileNames, options);
     // 获取检查器，我们将使用它来查找更多关于 ast 的信息
     this.checker = program.getTypeChecker();
+
+    this.fileNames = fileNames;
 
     // 访问程序中的每个sourceFile
     for (const sourceFile of program.getSourceFiles()) {
@@ -79,8 +82,15 @@ class TsToJson {
    * @param node
    */
   generateInterfaceDeclaration(node: ts.Node) {
+    // @ts-ignore
+    if (node.parent?.fileName !== this.fileNames[0]) return;
     const newNode = node as ts.InterfaceDeclaration;
     const symbol = this.checker.getSymbolAtLocation(newNode.name);
+    const firstHeritageClause = newNode.heritageClauses![0];
+    const firstHeritageClauseType = firstHeritageClause.types![0];
+    const extendsType = this.checker.getTypeAtLocation(
+      firstHeritageClauseType.expression
+    );
     const { escapedName } = symbol;
     const { name = escapedName as string, ...rest } = this._getDocs(symbol);
     this.interfaces[name] = {
@@ -90,6 +100,22 @@ class TsToJson {
     symbol.members.forEach((member) => {
       this.interfaces[name].props.push(this._serializeSymbol(member));
     });
+    if (extendsType?.symbol?.members && extendsType.symbol.members.size > 0) {
+      // 接口 extends 接口（Interface）
+      extendsType.symbol.members.forEach((member) => {
+        this.interfaces[name].props.push(this._serializeSymbol(member));
+      });
+    } else if (firstHeritageClauseType) {
+      console.log("暂时不支持接口继承Type类型");
+      // 接口 extends 类型（Type）
+      // const type = this.checker.typeToTypeNode(
+      //   this.checker.getTypeAtLocation(firstHeritageClauseType),
+      //   firstHeritageClauseType,
+      //   ts.NodeBuilderFlags.InTypeAlias
+      //   // ts.TypeFormatFlags.InTypeAlias
+      // );
+      // console.log(firstHeritageClauseType.getFullText());
+    }
   }
 
   /**
@@ -112,8 +138,9 @@ class TsToJson {
    * @returns
    */
   _serializeSymbol(symbol: ts.Symbol): DocsType {
+    if (!symbol) return;
     const docs = this._getDocs(symbol);
-    const questionToken = (<any>symbol.valueDeclaration).questionToken;
+    const questionToken = (<any>symbol.valueDeclaration)?.questionToken;
     const type = this.checker.typeToString(
       this.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration)
     );
@@ -148,7 +175,10 @@ class TsToJson {
    */
   _getDocs(symbol: ts.Symbol): DocsType {
     const docs: DocsType = {};
-    if (Array.isArray(symbol.getJsDocTags(this.checker))) {
+    if (
+      symbol.getJsDocTags &&
+      Array.isArray(symbol.getJsDocTags(this.checker))
+    ) {
       symbol.getJsDocTags(this.checker).forEach((tag) => {
         docs[tag.name] = tag.text && tag.text[0].text;
       });
@@ -171,13 +201,13 @@ class TsToJson {
   }
 
   parse(
-    fileNames: string[],
+    fileNames: string,
     options: ts.CompilerOptions = {
       target: ts.ScriptTarget.ES5,
       module: ts.ModuleKind.CommonJS,
     }
   ) {
-    this._createProgram(fileNames, options);
+    this._createProgram([fileNames], options);
     return this.interfaces;
   }
 }

@@ -15,11 +15,12 @@ export interface Interfaces {
     };
 }
 /**
- * Ts Interface 或 Type 类型定义转换为 json
+ * Ts Interface 类型定义转换为 json
  */
 declare class TsToJson {
     checker: ts.TypeChecker;
     interfaces: Interfaces;
+    fileNames: string[];
     types: {};
     _createProgram(fileNames: string[], options: ts.CompilerOptions): void;
     /**
@@ -56,6 +57,6 @@ declare class TsToJson {
      * @returns boolean
      */
     _isNodeExported(node: ts.Node): boolean;
-    parse(fileNames: string[], options?: ts.CompilerOptions): Interfaces;
+    parse(fileNames: string, options?: ts.CompilerOptions): Interfaces;
 }
 export default TsToJson;

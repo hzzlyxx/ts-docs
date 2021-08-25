@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-06 17:24:48
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-11 13:51:07
+ * @LastEditTime: 2021-08-25 10:37:55
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -24,7 +24,7 @@ function readFiles() {
         const typePath = path.join(dir, `./${d}/${f}/type.ts`);
         if (fs.existsSync(typePath)) {
           const ts2Json = new TsToJson();
-          const json = ts2Json.parse([`${typePath}`]);
+          const json = ts2Json.parse(typePath);
           const json2Markdown = new JsonToMarkdown();
           fs.writeFileSync(
             path.join(dir, `./${d}/${f}/index.md`),

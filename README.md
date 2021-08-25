@@ -1,3 +1,16 @@
+## @hzzlyxx/ts-docs
+
+![NPM version](https://img.shields.io/npm/v/@hzzlyxx/ts-docs)
+![NPM download](https://img.shields.io/npm/dt/@hzzlyxx/ts-docs)
+
+### How to use
+
+```
+npm install @hzzlyxx/ts-docs --save
+// or
+yarn add @hzzlyxx/ts-docs
+```
+
 ### Examples
 
 ```ts
@@ -6,7 +19,7 @@ import { TsToJson, JsonToMarkdown } from "@hzzlyxx/ts-docs";
 
 const ts2Json = new TsToJson();
 const json2Markdown = new JsonToMarkdown();
-const json = ts2Json.parse(["./type.ts"]); // fileName 文件路径
+const json = ts2Json.parse("./type.ts"); // fileName 文件路径
 fs.writeFileSync(
   path.join(dir, `./index.md`),
   json2Markdown.commentToMarkDown(json)
