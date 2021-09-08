@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-06 14:31:20
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-11 17:12:30
+ * @LastEditTime: 2021-09-08 15:44:32
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -38,7 +38,8 @@ class JsonToMarkdown {
     const { props, ignore, description } = data;
     if (ignore) return;
     return `## ${name}
-  ${description ? `#### ${description} \n` : ""}
+  ${description ? `${description} \n` : ""}
+  ${`## API \n`}
   | 属性 | 描述 | 类型 | 默认值 | 必填 |
   | --- | --- | --- | --- | ---|
   ${props.map((prop) => this.renderProp(prop)).join("")}

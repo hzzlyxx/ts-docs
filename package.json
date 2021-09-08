@@ -1,6 +1,6 @@
 {
   "name": "@hzzlyxx/ts-docs",
-  "version": "1.0.6",
+  "version": "1.0.10",
   "description": "TS接口类型转换为json对象",
   "author": "hzzly <hjingren@aliyun.com>",
   "license": "MIT",

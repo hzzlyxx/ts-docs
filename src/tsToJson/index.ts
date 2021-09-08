@@ -2,7 +2,7 @@
  * @Author: hzzly
  * @Date: 2021-08-04 14:26:13
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-25 10:37:21
+ * @LastEditTime: 2021-08-25 14:11:24
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -82,40 +82,47 @@ class TsToJson {
    * @param node
    */
   generateInterfaceDeclaration(node: ts.Node) {
-    // @ts-ignore
-    if (node.parent?.fileName !== this.fileNames[0]) return;
+    if (
+      // @ts-ignore
+      node.parent?.fileName.replace(/\\/g, "/") !==
+      this.fileNames[0].replace(/\\/g, "/")
+    )
+      return;
     const newNode = node as ts.InterfaceDeclaration;
     const symbol = this.checker.getSymbolAtLocation(newNode.name);
-    const firstHeritageClause = newNode.heritageClauses![0];
-    const firstHeritageClauseType = firstHeritageClause.types![0];
-    const extendsType = this.checker.getTypeAtLocation(
-      firstHeritageClauseType.expression
-    );
     const { escapedName } = symbol;
     const { name = escapedName as string, ...rest } = this._getDocs(symbol);
     this.interfaces[name] = {
       ...rest,
       props: [],
     };
+    if (newNode.heritageClauses) {
+      // 是否有extends
+      const firstHeritageClause = newNode.heritageClauses[0];
+      const firstHeritageClauseType = firstHeritageClause.types![0];
+      const extendsType = this.checker.getTypeAtLocation(
+        firstHeritageClauseType.expression
+      );
+      if (extendsType?.symbol?.members && extendsType.symbol.members.size > 0) {
+        // 接口 extends 接口（Interface）
+        extendsType.symbol.members.forEach((member) => {
+          this.interfaces[name].props.push(this._serializeSymbol(member));
+        });
+      } else if (firstHeritageClauseType) {
+        console.log("暂时不支持接口继承Type类型");
+        // 接口 extends 类型（Type）
+        // const type = this.checker.typeToTypeNode(
+        //   this.checker.getTypeAtLocation(firstHeritageClauseType),
+        //   firstHeritageClauseType,
+        //   ts.NodeBuilderFlags.InTypeAlias
+        //   // ts.TypeFormatFlags.InTypeAlias
+        // );
+        // console.log(firstHeritageClauseType.getFullText());
+      }
+    }
     symbol.members.forEach((member) => {
       this.interfaces[name].props.push(this._serializeSymbol(member));
     });
-    if (extendsType?.symbol?.members && extendsType.symbol.members.size > 0) {
-      // 接口 extends 接口（Interface）
-      extendsType.symbol.members.forEach((member) => {
-        this.interfaces[name].props.push(this._serializeSymbol(member));
-      });
-    } else if (firstHeritageClauseType) {
-      console.log("暂时不支持接口继承Type类型");
-      // 接口 extends 类型（Type）
-      // const type = this.checker.typeToTypeNode(
-      //   this.checker.getTypeAtLocation(firstHeritageClauseType),
-      //   firstHeritageClauseType,
-      //   ts.NodeBuilderFlags.InTypeAlias
-      //   // ts.TypeFormatFlags.InTypeAlias
-      // );
-      // console.log(firstHeritageClauseType.getFullText());
-    }
   }
 
   /**
