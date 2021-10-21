@@ -4,7 +4,7 @@ exports.__esModule = true;
  * @Author: hzzly
  * @Date: 2021-08-06 17:24:48
  * @LastEditors: hzzly
- * @LastEditTime: 2021-08-23 17:27:10
+ * @LastEditTime: 2021-08-25 10:37:55
  * @Copyright: hzzly(hjingren@aliyun.com)
  * @Description: description
  */
@@ -20,8 +20,6 @@ function readFiles() {
         var absolutePath = path.join(dir, d);
         if (fs.lstatSync(dir).isDirectory()) {
             fs.readdirSync(absolutePath).forEach(function (f) {
-                if (f !== "Message")
-                    return;
                 var typePath = path.join(dir, "./" + d + "/" + f + "/type.ts");
                 if (fs.existsSync(typePath)) {
                     var ts2Json = new lib_1.TsToJson();

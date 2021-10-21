@@ -1,6 +1,6 @@
 {
   "name": "@hzzlyxx/ts-docs",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "TS接口类型转换为json对象",
   "author": "hzzly <hjingren@aliyun.com>",
   "license": "MIT",
@@ -9,7 +9,8 @@
   "keywords": [
     "TypeScript",
     "ts2json",
-    "json2markdown"
+    "json2markdown",
+    "esm2json"
   ],
   "files": [
     "lib"
@@ -19,6 +20,8 @@
     "clean": " rm -rf lib"
   },
   "dependencies": {
+    "@babel/parser": "^7.15.8",
+    "@babel/traverse": "^7.15.4",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   },
